@@ -50,15 +50,21 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.OCI_HOST }}
-          username: ${{ secrets.OCI_USER }}
-          key: ${{ secrets.OCI_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
 
             echo "=== Atualizando código ==="
             cd ${{ env.DEPLOY_PATH }}
             git pull origin main
+
+            echo "=== Garantindo API_KEYS ==="
+            # Garantir que a variável API_KEYS inclui a key padrão
+            if ! grep -q 'API_KEYS' /home/ubuntu/.env 2>/dev/null; then
+              echo 'API_KEYS=dev-key-cosmic-suite' >> /home/ubuntu/.env
+            fi
 
             echo "=== Rebuild do container ==="
             cd /home/ubuntu
