@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  astroengine-api:
+    build: .
+    container_name: astroengine-api
+    restart: always
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=${PORT:-8000}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - API_KEYS=${API_KEYS:-dev-key-cosmic-suite}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
+      - DEFAULT_HOUSE_SYSTEM=${DEFAULT_HOUSE_SYSTEM:-placidus}
+      - DEFAULT_ORB_CONJUNCTION=${DEFAULT_ORB_CONJUNCTION:-8.0}
+      - DEFAULT_ORB_OPPOSITION=${DEFAULT_ORB_OPPOSITION:-8.0}
+      - DEFAULT_ORB_TRINE=${DEFAULT_ORB_TRINE:-8.0}
+      - DEFAULT_ORB_SQUARE=${DEFAULT_ORB_SQUARE:-7.0}
+      - DEFAULT_ORB_SEXTILE=${DEFAULT_ORB_SEXTILE:-6.0}
+      - SOURCE_REPOSITORY=${SOURCE_REPOSITORY:-https://github.com/FW2B/astroengine-api}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
