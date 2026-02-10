@@ -56,20 +56,19 @@ jobs:
           script: |
             set -e
 
+            DEPLOY_DIR=/home/ubuntu/astroengine-api
+
             echo "=== Atualizando código ==="
-            cd ${{ env.DEPLOY_PATH }}
+            cd $DEPLOY_DIR
             git pull origin main
 
-            echo "=== Garantindo API_KEYS ==="
-            # Garantir que a variável API_KEYS inclui a key padrão
-            if ! grep -q 'API_KEYS' /home/ubuntu/.env 2>/dev/null; then
-              echo 'API_KEYS=dev-key-cosmic-suite' >> /home/ubuntu/.env
-            fi
+            echo "=== Configurando API_KEYS ==="
+            export API_KEYS=dev-key-cosmic-suite
 
             echo "=== Rebuild do container ==="
-            cd /home/ubuntu
-            docker compose -f docker-compose.yml build astroengine-api
-            docker compose -f docker-compose.yml up -d astroengine-api
+            cd $DEPLOY_DIR
+            docker compose build
+            docker compose up -d
 
             echo "=== Aguardando health check ==="
             sleep 10
