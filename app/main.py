@@ -16,7 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.middleware.rate_limit import RateLimitMiddleware
-from app.routers import natal, synastry, transits, composite, planets
+from app.routers import natal, synastry, transits, composite, planets, numerology
 
 # --- Logging Estruturado ---
 settings = get_settings()
@@ -55,9 +55,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AstroEngine API",
     description=(
-        "Motor de cálculo astrológico de alta precisão baseado na Swiss Ephemeris. "
-        "Fornece cálculos de mapas natais, sinastria, trânsitos e mapas compostos. "
-        "Licenciado sob GNU AGPL v3.0."
+        "Motor de cálculo astrológico e numerológico de alta precisão. "
+        "Fornece cálculos de mapas natais, sinastria, trânsitos, mapas compostos "
+        "e numerologia pitagórica completa. Licenciado sob GNU AGPL v3.0."
     ),
     version="1.0.0",
     lifespan=lifespan,
@@ -81,6 +81,7 @@ app.include_router(synastry.router, tags=["Synastry"])
 app.include_router(transits.router, tags=["Transits"])
 app.include_router(composite.router, tags=["Composite"])
 app.include_router(planets.router, tags=["Planets"])
+app.include_router(numerology.router, tags=["Numerology"])
 
 
 # --- Endpoints Utilitários ---
